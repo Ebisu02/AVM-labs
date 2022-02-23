@@ -26,11 +26,11 @@ $(BUILD_OBJ_DIRS) $(TESTS_O_DIRS): %:
 $(OUTPUT_H_FILES): output/%.h: src/%.h
 	cp $< $@
 
-$(BUILD_OBJ_FILES): .build/src/%.o: src/%.c $(SRC_H_FILES)
-	gcc -c $< -I . -o $@
+$(BUILD_OBJ_FILES): .build/src/%.o: src/%.cpp $(SRC_H_FILES)
+	g++ -c $< -I . -o $@
 
-$(TESTS_O_FILES): .build/tests/%.o: tests/%.c $(TESTS_O_DIRS) $(OUTPUT_H_FILES) $(TESTS_H_FILES)
-	gcc -c $< -I output -I . -o $@
+$(TESTS_O_FILES): .build/tests/%.o: tests/%.cpp $(TESTS_O_DIRS) $(OUTPUT_H_FILES) $(TESTS_H_FILES)
+	g++ -c $< -I output -I . -o $@
 
 $(dir ./output/):
 	mkdir -p $@
@@ -39,7 +39,7 @@ test: all output/test_bin
 	./output/test_bin
 
 output/test_bin: $(TESTS_O_FILES) output/$(OUT_NAME)
-	gcc $^ -o $@
+	g++ $^ -o $@
 
 clean:
 	rm -rf .build
