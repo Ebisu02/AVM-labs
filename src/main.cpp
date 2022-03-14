@@ -1,12 +1,10 @@
 #include "mySimpleComputer.h"
 #include "myTerm.h"
+#include "bc.h"
 
 int main()
 {
 	cout << "abacaba";
-	mt_clrscr();
-	mt_gotoxy(10, 10);
-	mt_setfgcolor(YELLOWW);
-	mt_setbgcolor(GREEN);
+	bc_box(1, 1, 2, 2);
 	return 0;
 }

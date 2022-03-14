@@ -3,7 +3,6 @@
 #include <iterator>
 
 #include "myTerm.h"
-#include "bc.cpp"
 
 const unsigned int bigchars[18][2]= {
                 {3'890'741'118,  2'130'700'263},  // 0
@@ -31,6 +30,7 @@ enum BIGCHAR {
     NINE, A, B, C, D, E, F, PLUS, MINUS,
 };
 
+#include "bc.cpp"
 
 int bc_printA(char * str); // Out a string with simbols from extra code table
 int bc_box(int x1, int y1, int x2, int y2); // psevdo ramka

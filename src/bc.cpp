@@ -11,7 +11,7 @@ int bc_printA(char * str)
 
 int bc_box(int x1, int y1, int x2, int y2) // x1 - row, y1 - column
 {
-	mt_gotoXY(x1, y1);
+	mt_gotoxy(x1, y1);
 	mt_setfgcolor(GREEN);
 	char* t = new char[x2 + 2];
 	for (int i = 1; i < x2; ++i)
@@ -22,21 +22,21 @@ int bc_box(int x1, int y1, int x2, int y2) // x1 - row, y1 - column
 	t[0] = '1';
 	t[x2 + 1] = 'k';
 	bc_printA(t);
-	char t1 = new char[1];
+	char* t1 = new char[1];
 	t1[0] = 'x';
 	for (int i  = x1 + 1; i < x1 + y2 + 1; ++i)
 	{
-		mt_gotoXY(i, y2);
+		mt_gotoxy(i, y2);
 		bc_printA(t1);
-		mt_gotoXY(i, x1 + x2 + 1);
+		mt_gotoxy(i, x1 + x2 + 1);
 		bc_printA(t1);
 	}
 	
-	mt_gotoXY(y2 + x1 + 1, y1);
+	mt_gotoxy(y2 + x1 + 1, y1);
 	t[0] = 'n';
 	t[x2 + 1] = 'j';
 	bc_printA(t);
-	mt_gotoXY(x1 + y2 + 2, y1 + x2 + 2);
+	mt_gotoxy(x1 + y2 + 2, y1 + x2 + 2);
 	mt_setfgcolor(WHITE);
 	return 0;
 }
@@ -56,12 +56,12 @@ int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1) 
 		{
 			((bigchars[chindex][ind] >> j) & 0x1) == 0 ? t[j] = ' ' : t[j] = 'a'; 
 		}
-		mt_gotoXY(x + i, y);
+		mt_gotoxy(x + i, y);
 		bc_printA(t);
 	}
 	mt_setbgcolor(BLACK);
 	mt_setfgcolor(WHITE);
-	mt_gotoXY(18, 0);
+	mt_gotoxy(18, 0);
 	return 0;	
 }
 
@@ -81,8 +81,8 @@ int bc_getsetbigcharpos(int * big, int x, int y, int* value) // x - row, y - col
 	if (x > 7 || x < 0 || y > 7 || y < 0)
 		return -1;	
 	else
-		if (((big[row / 4] >> ((row % 4) * 8 + col)) & 0x1) == 1)
-			*value = 1
+		if (((big[x / 4] >> ((x % 4) * 8 + y)) & 0x1) == 1)
+			*value = 1;
 		else
 			*value = 0;
 	return 0;
