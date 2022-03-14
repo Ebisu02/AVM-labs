@@ -9,7 +9,7 @@ int bc_printA(char * str)
 	return 0;
 }
 
-int bc_box(int x1, int y1, int x2, int y2)
+int bc_box(int x1, int y1, int x2, int y2) // x1 - row, y1 - column
 {
 	mt_gotoXY(x1, y1);
 	mt_setfgcolor(GREEN);
@@ -41,7 +41,7 @@ int bc_box(int x1, int y1, int x2, int y2)
 	return 0;
 }
 
-int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1)
+int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1) // x - row, y - column
 {
 	mt_setbgcolor(color);
 	mt_setfgcolor(color1);
@@ -65,22 +65,39 @@ int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1)
 	return 0;	
 }
 
-int bc_setbigcharpos(int * big, int x, int y, int value)
+int bc_setbigcharpos(int * big, int x, int y, int value) // x - row, y - column
 {
-	
+	if (x > 7 || x < 0 || y > 7 || y < 0)
+		return -1;
+	if (value)
+		big[x / 4] |= 1 << ((x % 4) * 8 + y);
+	else
+	 	big[x / 4] &= ~(1 << ((x % 4) * 8 + y));
+	return 0;
 }
 
-int bc_getsetbigcharpos(int * big, int x, int y, int* value)
+int bc_getsetbigcharpos(int * big, int x, int y, int* value) // x - row, y - column
 {
-
+	if (x > 7 || x < 0 || y > 7 || y < 0)
+		return -1;	
+	else
+		if (((big[row / 4] >> ((row % 4) * 8 + col)) & 0x1) == 1)
+			*value = 1
+		else
+			*value = 0;
+	return 0;
 }
 
 int bc_bigcharwrite(int fd, int * big, int count)
 {
-	
+	write(fd, big, sizeof(int) * 2 * count);
+	close(fd);
+	return 0;
 }
 
 int bc_bigcharread(int fd, int* big, int need_count, int* count)
 {
-	
+	read(fd, big, sizeof(int) * 2 * need_count);
+	close(fd);
+	return 0;
 }
