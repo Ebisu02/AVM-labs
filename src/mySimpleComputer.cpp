@@ -7,7 +7,6 @@
 // 5 - "E" - invalid command
 
 
-
 using namespace std;
 
 
@@ -45,6 +44,7 @@ int sc_memoryGet(int address, int value)
 		flags = flags | (1 << (1 - 1));
 		return printf("\nError: Segmentation fault\n");
 	}
+	return 0; 
 }
 
 int sc_memorySave(char * filename)

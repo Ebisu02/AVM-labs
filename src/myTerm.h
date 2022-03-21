@@ -18,8 +18,6 @@ enum COLORS
 	GREEN,
 };
 
-#include "myTerm.cpp"
-
 int mt_setbgcolor(COLORS color);
 int mt_setfgcolor(COLORS color);
 int mt_getscreensize(int * rows, int * cols);

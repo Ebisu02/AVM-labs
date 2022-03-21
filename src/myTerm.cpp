@@ -32,6 +32,7 @@ int mt_clrscr()
 {
 	cout << "\E[H\E[2j";
 	mt_gotoxy(1, 1);
+	return 0;
 }
 
 int mt_setfgcolor(COLORS color)

@@ -24,7 +24,7 @@ int bc_box(int x1, int y1, int x2, int y2) // x1 - row, y1 - column
 	bc_printA(t);
 	char* t1 = new char[1];
 	t1[0] = 'x';
-	for (int i  = x1 + 1; i < x1 + y2 + 1; ++i)
+	for (int i = x1 + 1; i < x1 + y2 + 1; ++i)
 	{
 		mt_gotoxy(i, y2);
 		bc_printA(t1);
