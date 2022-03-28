@@ -9,34 +9,36 @@ int bc_printA(char * str)
 	return 0;
 }
 
-int bc_box(int x1, int y1, int x2, int y2) // x1 - row, y1 - column
+int bc_box(int r, int c, int w, int h) //
 {
-	mt_gotoxy(x1, y1);
-	mt_setfgcolor(GREEN);
-	char* t = new char[x2 + 2];
-	for (int i = 1; i < x2; ++i)
+	mt_gotoxy(r, c);
+	mt_setfgcolor(BLUE);
+	char* t = new char[w + 2];
+	for (int i = 1; i < w + 1; ++i)
 	{
-		t[i] = 'p';
+		t[i] = 'q';
 	}
 	
 	t[0] = '1';
-	t[x2 + 1] = 'k';
+	t[w + 1] = 'k';
 	bc_printA(t);
+	
 	char* t1 = new char[1];
 	t1[0] = 'x';
-	for (int i = x1 + 1; i < x1 + y2 + 1; ++i)
+	
+	for (int i = r + 1; i < r + h + 1; ++i)
 	{
-		mt_gotoxy(i, y2);
+		mt_gotoxy(i, c);
 		bc_printA(t1);
-		mt_gotoxy(i, x1 + x2 + 1);
+		mt_gotoxy(i, c + w + 1);
 		bc_printA(t1);
 	}
 	
-	mt_gotoxy(y2 + x1 + 1, y1);
-	t[0] = 'n';
-	t[x2 + 1] = 'j';
+	mt_gotoxy(h + r + 1, c);
+	t[0] = 'm';
+	t[w + 1] = 'j';
 	bc_printA(t);
-	mt_gotoxy(x1 + y2 + 2, y1 + x2 + 2);
+	mt_gotoxy(r + h + 2, c + w + 2);
 	mt_setfgcolor(WHITE);
 	return 0;
 }
@@ -46,22 +48,22 @@ int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1) 
 	mt_setbgcolor(color);
 	mt_setfgcolor(color1);
 	char* t = new char[8];
-	for (int i = 0, j = 0, ind = 0; i < 8; ++i)
+	for (int i = 0, k = 0, ind = 0; i < 8; ++i)
 	{
 		if (i == 4)
 		{
 			ind = 1;
 		}
-		for (int z = 0; z < 8; ++z, ++j)
+		for (int j = 0; j < 8; ++j, ++k)
 		{
-			((bigchars[chindex][ind] >> j) & 0x1) == 0 ? t[j] = ' ' : t[j] = 'a'; 
+			((bigchars[chindex][ind] >> k) & 0x1) == 0 ? t[j] = ' ' : t[j] = '`'; 
 		}
 		mt_gotoxy(x + i, y);
 		bc_printA(t);
 	}
 	mt_setbgcolor(BLACK);
 	mt_setfgcolor(WHITE);
-	mt_gotoxy(18, 0);
+	mt_gotoxy(24, 0);
 	return 0;	
 }
 

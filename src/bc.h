@@ -4,7 +4,7 @@
 
 #include "myTerm.h"
 
-inline const unsigned int bigchars[18][2]= {
+inline const unsigned int bigchars[19][2]= {
                 {3'890'741'118,  2'130'700'263},  // 0
                 {943'602'744,    943'208'504},    // 1
                 {1'894'252'414,  4'294'903'580},  // 2
@@ -23,11 +23,12 @@ inline const unsigned int bigchars[18][2]= {
                 {1'057'488'895,  117'901'119},    // F
                 {2'115'508'224,  1'579'134},      // +
                 {2'113'929'216,  126},            // -
+                {507410150, 3866508830} 	  //K
         };
 
 enum BIGCHAR {
     ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT,
-    NINE, A, B, C, D, E, F, PLUS, MINUS,
+    NINE, A, B, C, D, E, F, PLUS, MINUS, K,
 };
 
 int bc_printA(char * str); // Out a string with simbols from extra code table
