@@ -26,7 +26,8 @@ inline const unsigned int bigchars[19][2]= {
                 {507410150, 3866508830} 	  //K
         };
 
-enum BIGCHAR {
+enum BIGCHAR
+{
     ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT,
     NINE, A, B, C, D, E, F, PLUS, MINUS, K,
 };

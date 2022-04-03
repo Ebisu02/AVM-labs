@@ -20,7 +20,7 @@ void print_interface()
 			std::cout << "\n";
 		}
 		std::cout << " +" << setw(4) << std::setfill('0') << cur_value << ' ';
-		mt_setfgcolor(LIGHT_BLUE);
+		//mt_setfgcolor(LIGHT_BLUE);
 		//std::cout << "ABACABA";
 	}
 	//std::cout << "ABACABA";
@@ -35,28 +35,49 @@ void print_interface()
 	/* FLAGS */
 	
 	mt_gotoxy(11, 79);
+	unsigned int tFlag;
+	sc_regGet(SEGMENTATION_FAULT, &tFlag);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	std::cout << "0 ";
+	sc_regGet(DIVISION_BY_ZERO, &tFlag);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	std::cout << "Z ";
+	sc_regGet(OUT_OF_BOUNDS, &tFlag);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	std::cout << "B ";
+	sc_regGet(CLOCK_PULSE_IGNORE, &tFlag);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	std::cout << "C ";
+	sc_regGet(INVALID_COMMAND, &tFlag);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	std::cout << "I ";
+	mt_setfgcolor(WHITE);
+	bc_box(10, 73, 20, 1);
 	
 	//big chars printing //
+	
 	//bc_box(13, 1, 45, 8);
-	bc_printbigchar(ZERO, 14, 2, BLACK, BLUE);
-	bc_printbigchar(ONE, 14, 11, BLACK, BLUE);
-	bc_printbigchar(TWO, 14, 20, BLACK, BLUE);
-	bc_printbigchar(THREE, 14, 29, BLACK, BLUE);
-	bc_printbigchar(FOUR, 14, 38, BLACK, BLUE);
-	bc_printbigchar(FIVE, 14, 47, BLACK, BLUE);
-	bc_printbigchar(SIX, 14, 56, BLACK, BLUE);
-	bc_printbigchar(SEVEN, 14, 65, BLACK, BLUE);
-	bc_printbigchar(EIGHT, 14, 74, BLACK, BLUE);
-	bc_printbigchar(NINE, 14, 83, BLACK, BLUE);
-	bc_printbigchar(A, 25, 2, BLACK, BLUE);
-	bc_printbigchar(B, 25, 11, BLACK, BLUE);
-	bc_printbigchar(C, 25, 20, BLACK, BLUE);
-	bc_printbigchar(D, 25, 29, BLACK, BLUE);
-	bc_printbigchar(E, 25, 38, BLACK, BLUE);
-	bc_printbigchar(F, 25, 47, BLACK, BLUE);
-	bc_printbigchar(PLUS, 25, 56, BLACK, BLUE);
-	bc_printbigchar(MINUS, 25, 65, BLACK, BLUE);
-	bc_printbigchar(K, 25, 74, BLACK, BLUE);
+	bc_printbigchar(PLUS, 14, 2, BLACK, BLUE);
+	bc_printbigchar(ZERO, 14, 11, BLACK, BLUE);
+	bc_printbigchar(ZERO, 14, 20, BLACK, BLUE);
+	bc_printbigchar(ZERO, 14, 29, BLACK, BLUE);
+	bc_printbigchar(ZERO, 14, 38, BLACK, BLUE);
+	bc_printbigchar(ZERO, 14, 47, BLACK, BLUE);
+	
+	// info
+	mt_setfgcolor(LIGHT_BLUE);
+	mt_gotoxy(14, 76);
+	std::cout << "l - load";
+	mt_gotoxy(15, 76);
+	std::cout << "s - save";
+	mt_gotoxy(16, 76);
+	std::cout << "r - run";
+	mt_gotoxy(17, 76);
+	std::cout << "t - step";
+	mt_gotoxy(18, 76);
+	std::cout << "i - reset";
+	mt_gotoxy(19, 76);
+	bc_box(13, 73, 13, 7);
 	mt_gotoxy(36, 1);
 	return;
 }
@@ -68,6 +89,9 @@ int main()
 	sc_memoryInit();
 	sc_regInit();
 	sc_regSet(CLOCK_PULSE_IGNORE, 1);
-	print_interface();
-	
+	sc_regSet(INVALID_COMMAND, 1);
+	sc_regSet(OUT_OF_BOUNDS, 1);
+	sc_regSet(DIVISION_BY_ZERO, 1);
+	sc_regSet(SEGMENTATION_FAULT, 1);
+	print_interface();	
 }

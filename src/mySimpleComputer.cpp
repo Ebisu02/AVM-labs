@@ -94,7 +94,7 @@ int sc_regInit()
 
 int sc_regSet(int reg, int value)
 {
-	if ((reg > 5) || (reg < 1)) 
+	if ((reg > 5) || (reg < 0)) 
 	{
 		return -1;
 	}
@@ -111,7 +111,7 @@ int sc_regSet(int reg, int value)
 
 int sc_regGet(int reg, unsigned int* value)
 {
-	if ((reg >= 5) || (reg <= 1))
+	if ((reg > 5) || (reg < 0))
 	{
 		return -1;
 	}

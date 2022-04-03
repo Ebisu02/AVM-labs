@@ -45,7 +45,6 @@ int bc_box(int r, int c, int w, int h) //
 
 int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1) // x - row, y - column
 {
-	mt_setbgcolor(color);
 	mt_setfgcolor(color1);
 	char* t = new char[8];
 	for (int i = 0, k = 0, ind = 0; i < 8; ++i)
@@ -61,7 +60,6 @@ int bc_printbigchar(BIGCHAR chindex, int x, int y, COLORS color, COLORS color1) 
 		mt_gotoxy(x + i, y);
 		bc_printA(t);
 	}
-	mt_setbgcolor(BLACK);
 	mt_setfgcolor(WHITE);
 	mt_gotoxy(24, 0);
 	return 0;	
