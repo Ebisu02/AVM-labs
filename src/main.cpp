@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <sys/time.h>
+#include <signal.h>
 #include "mySimpleComputer.h"
 #include "myTerm.h"
 #include "bc.h"
@@ -8,6 +10,7 @@
 
 int counter = 0;
 int cur_index = 0;
+int accumulator = 0;
 
 void print_interface()
 {
@@ -29,7 +32,7 @@ void print_interface()
 		if (counter == i) mt_setfgcolor(RED);
 		if (((cur_value >> 14) & 1) == 0) std::cout << '+';
 		else std::cout << '-';
-		std::cout << setw(4) << std::setfill('0')  << '0' << ' ';
+		std::cout << setw(4) << std::setfill('0')  << cur_value << ' ';
 		mt_setfgcolor(LIGHT_BLUE);
 		//std::cout << "ABACABA";
 	}
@@ -67,18 +70,11 @@ void print_interface()
 	//big chars printing //
 	
 	//bc_box(13, 1, 45, 8);
-	bc_printbigchar(PLUS, 14, 2, BLACK, BLUE);
-	bc_printbigchar(ZERO, 14, 11, BLACK, BLUE);
-	bc_printbigchar(ZERO, 14, 20, BLACK, BLUE);
-	bc_printbigchar(ZERO, 14, 29, BLACK, BLUE);
-	bc_printbigchar(ZERO, 14, 38, BLACK, BLUE);
-	bc_printbigchar(ZERO, 14, 47, BLACK, BLUE);
 	int v = 0;
 	sc_memoryGet(counter, v);
 	if (((v >> 14) & 1) == 0) bc_printbigchar(PLUS, 14, 2, BLACK, BLUE);
 	else bc_printbigchar(MINUS, 14, 2, BLACK, BLUE);
-	bc_printbigchar((BIGCHAR)(
-	(v >> 12) & 0b1111), 14, 11, BLACK, BLUE);
+	bc_printbigchar((BIGCHAR)((v >> 12) & 0b1111), 14, 11, BLACK, BLUE);
 	bc_printbigchar((BIGCHAR)((v >> 8) & 0b1111), 14, 20, BLACK, BLUE);
 	bc_printbigchar((BIGCHAR)((v >> 4) & 0b1111), 14, 29, BLACK, BLUE);
 	bc_printbigchar((BIGCHAR)((v) & 0b1111), 14, 38, BLACK, BLUE);
@@ -102,6 +98,28 @@ void print_interface()
 	std::cout << "F6 - InstructionCounter";
 	mt_gotoxy(22, 76);
 	bc_box(13, 73, 26, 8);
+
+	//names
+	mt_setfgcolor(BLUE);
+	mt_gotoxy(1,25);
+	std::cout << " Memory ";
+	mt_gotoxy(1, 85);
+	std::cout << " Accumulator ";
+	mt_gotoxy(2, 90);
+	sc_memoryGet(cur_index, accumulator);
+	mt_setfgcolor(YELLOWW);
+	if (((accumulator >> 14) & 1) == 0) std::cout << '+';
+	else std::cout << '-';
+	std::cout << std::hex << std::setw(4) << std::setfill('0') << accumulator << std::dec;
+	mt_setfgcolor(BLUE);
+	mt_gotoxy(4, 82);
+	std::cout << " Instruction Counter ";
+	mt_gotoxy(5, 90);
+	mt_setfgcolor(YELLOWW);
+	std::cout << std::dec << setw(2) << std::setfill('0') << counter << std::dec;
+	mt_setfgcolor(BLUE);
+	mt_gotoxy(7, 85);
+	std::cout << " Operation ";
 	mt_gotoxy(36, 1);
 	return;
 }
@@ -109,45 +127,110 @@ void print_interface()
 void key_reset()
 {
 	sc_memoryInit();
+	counter = cur_index = 0;
 	sc_regInit();
-	counter = 0;
+	sc_regSet(CLOCK_PULSE_IGNORE, true);
 	print_interface();
+}
+
+void key_run()
+{
+	sc_regSet(CLOCK_PULSE_IGNORE, false);
 	KEYS key = None;
+	unsigned int tf1, tf2;
+	sc_regGet(CLOCK_PULSE_IGNORE, &tf1);
+	sc_regGet(OUT_OF_BOUNDS, &tf2);
+	while (tf1 == 0 && tf2 == 0)
+	{
+		mt_clrscr();
+		print_interface();
+		cur_index = counter;
+		pause();
+		rk_readkey(key);
+		print_interface();
+		if (counter >= 99 || key == Reset)
+		{
+			raise(SIGUSR1);
+			break;
+		}
+		sc_regGet(CLOCK_PULSE_IGNORE, &tf1);
+		sc_regGet(OUT_OF_BOUNDS, &tf2);
+		fflush(stdout);		
+	}
+}
+
+void set_timer(long time)
+{
+	itimerval nval, oval;
+	nval.it_interval.tv_sec = time;
+	nval.it_interval.tv_usec = 0;
+	nval.it_value.tv_sec = 1;
+	nval.it_value.tv_usec = 0;
+	setitimer(ITIMER_REAL, &nval, &oval);
+}
+
+void signal_handling_process(int signal)
+{
+	unsigned int v1, v2;
+	sc_regGet(CLOCK_PULSE_IGNORE, &v1);
+	sc_regGet(OUT_OF_BOUNDS, &v2);
+	if (v1 == 0 && v2 == 0)
+	{
+		counter++;
+		cur_index = counter;
+		mt_clrscr();
+		print_interface();
+	}
+	else if (v2 == 1)
+	{
+		key_reset();
+		print_interface();
+	}
+}
+
+void signal_reset(int signal)
+{
+	key_reset();
 }
 
 void main_logic()
 {
      	char* filename = "memory.bin";
 	char* touch_command = "touch memory.bin";
-	unsigned int flag;
-	int index = 0;
+	sc_regSet(CLOCK_PULSE_IGNORE, true);
+	counter = 0;
+	signal(SIGALRM, signal_handling_process);
+	signal(SIGUSR1, signal_reset);
 	KEYS key = None;
 	system(touch_command);
+	unsigned int tf;
+	sc_regGet(CLOCK_PULSE_IGNORE, &tf);
 	print_interface();
-	while(true)
+	while(key != CloseApplication && tf == 1)
 	{
-		counter = index;
 		rk_readkey(key);
 		switch(key)
 		{
 			case None: break;
 			case Load: sc_memoryLoad(filename); print_interface(); break;
 			case Save: sc_memorySave(filename); print_interface(); break;
-			case Run: print_interface(); break;
+			case Run: key_run(); print_interface(); break;
 			case Step: print_interface(); break;
 			case Reset: key_reset(); print_interface(); break;
-			case Accumulator: print_interface(); break;
+			case Accumulator: int v; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
+					  std::cin >> std::hex >> v; mt_setfgcolor(BLUE);
+					  sc_memorySet(counter, v); print_interface(); break;
 			case InstructionCounter: print_interface(); break;
-			case Down:  if (index < 90) index += 10; break;
-			case Up: if (index > 9) index -= 10; break;
-			case Left: if (index % 10 != 0) index -= 1; break;
-			case Right: if (index % 10 != 9) index += 1; break;
+			case Down:  if (cur_index < 90) cur_index += 10; break;
+			case Up: if (cur_index > 9) cur_index -= 10; break;
+			case Left: if (cur_index % 10 != 0) cur_index -= 1; break;
+			case Right: if (cur_index % 10 != 9) cur_index += 1; break;
 			case CloseApplication: exit(1); break;
 			default: break;
 		}
-		if (counter != index)
+		if (counter != cur_index)
 		{
-			counter = index;
+			counter = cur_index;
 			print_interface();
 		}
 		
