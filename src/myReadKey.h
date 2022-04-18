@@ -22,6 +22,7 @@ enum KEYS
 	Left,
 	Right,
 	CloseApplication,
+	Enter,
 };
 
 int rk_readkey(KEYS &key);

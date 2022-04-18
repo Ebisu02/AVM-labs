@@ -106,7 +106,6 @@ void print_interface()
 	mt_gotoxy(1, 85);
 	std::cout << " Accumulator ";
 	mt_gotoxy(2, 90);
-	sc_memoryGet(cur_index, accumulator);
 	mt_setfgcolor(YELLOWW);
 	if (((accumulator >> 14) & 1) == 0) std::cout << '+';
 	else std::cout << '-';
@@ -120,6 +119,16 @@ void print_interface()
 	mt_setfgcolor(BLUE);
 	mt_gotoxy(7, 85);
 	std::cout << " Operation ";
+	mt_gotoxy(8, 90);
+	mt_setfgcolor(YELLOWW);
+	int v4 = 0;
+	int v5 = 0;
+	int v6 = 0;
+	sc_memoryGet(cur_index, v6);
+	sc_commandDecode(&v4, &v5, v6);
+	std::cout << std::hex << v6;
+	std::cout << std::dec;
+	mt_setfgcolor(BLUE);
 	mt_gotoxy(36, 1);
 	return;
 }
@@ -148,7 +157,7 @@ void key_run()
 		pause();
 		rk_readkey(key);
 		print_interface();
-		if (counter >= 99 || key == Reset)
+		if (counter >= 100 || key == Reset)
 		{
 			raise(SIGUSR1);
 			break;
@@ -188,6 +197,12 @@ void signal_handling_process(int signal)
 	}
 }
 
+void key_step()
+{
+	if (cur_index <= 99) { ++cur_index; return; }
+	cur_index = 0; 
+}
+
 void signal_reset(int signal)
 {
 	key_reset();
@@ -215,17 +230,22 @@ void main_logic()
 			case Load: sc_memoryLoad(filename); print_interface(); break;
 			case Save: sc_memorySave(filename); print_interface(); break;
 			case Run: key_run(); print_interface(); break;
-			case Step: print_interface(); break;
+			case Step: key_step(); print_interface(); break;
 			case Reset: key_reset(); print_interface(); break;
 			case Accumulator: int v; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
 					  std::cin >> std::hex >> v; mt_setfgcolor(BLUE);
-					  sc_memorySet(counter, v); print_interface(); break;
-			case InstructionCounter: print_interface(); break;
+					  accumulator = v; print_interface(); break;
+			case InstructionCounter: int v3; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
+					  std::cin >> std::dec >> v3; mt_setfgcolor(BLUE);
+					  if (v3 <=100 && v3 >= 1) cur_index = v3 - 1; print_interface(); break;
 			case Down:  if (cur_index < 90) cur_index += 10; break;
 			case Up: if (cur_index > 9) cur_index -= 10; break;
 			case Left: if (cur_index % 10 != 0) cur_index -= 1; break;
 			case Right: if (cur_index % 10 != 9) cur_index += 1; break;
 			case CloseApplication: exit(1); break;
+			case Enter: int v2; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
+					  std::cin >> std::hex >> v2; mt_setfgcolor(BLUE);
+					  sc_memorySet(counter, v2); print_interface(); break;
 			default: break;
 		}
 		if (counter != cur_index)
@@ -239,6 +259,7 @@ void main_logic()
 
 int main()
 {
+	set_timer(1);
 	setbuf((stdout), 0);
 	sc_memoryInit();
 	sc_regInit();

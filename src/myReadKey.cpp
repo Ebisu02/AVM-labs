@@ -19,6 +19,7 @@ int rk_readkey(KEYS & key)
 	else if(b[0]=='r') 			key=KEYS::Run;
 	else if(b[0]=='t') 			key=KEYS::Step;
 	else if(b[0]=='i')		 	key=KEYS::Reset;
+	else if(b[0]=='\n')			key=KEYS::Enter;
 	else if(b[0]=='q') 			key=KEYS::CloseApplication;
 	else 					key=KEYS::None;
 	rk_mytermrestore();
