@@ -3,10 +3,7 @@
 #include <iomanip>
 #include <sys/time.h>
 #include <signal.h>
-#include "mySimpleComputer.h"
-#include "myTerm.h"
-#include "bc.h"
-#include "myReadKey.h"
+#include "msc.h"
 
 int counter = 0;
 int cur_index = 0;
@@ -210,7 +207,7 @@ void signal_reset(int signal)
 
 void main_logic()
 {
-     	char* filename = "memory.bin";
+    char* filename = "memory.bin";
 	char* touch_command = "touch memory.bin";
 	sc_regSet(CLOCK_PULSE_IGNORE, true);
 	counter = 0;
@@ -240,8 +237,8 @@ void main_logic()
 					  if (v3 <=100 && v3 >= 1) cur_index = v3 - 1; print_interface(); break;
 			case Down:  if (cur_index < 90) cur_index += 10; break;
 			case Up: if (cur_index > 9) cur_index -= 10; break;
-			case Left: if (cur_index % 10 != 0) cur_index -= 1; break;
-			case Right: if (cur_index % 10 != 9) cur_index += 1; break;
+			case Left: if (cur_index > 0) cur_index -= 1; break;
+			case Right: if (cur_index < 99) cur_index += 1; break;
 			case CloseApplication: exit(1); break;
 			case Enter: int v2; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
 					  std::cin >> std::hex >> v2; mt_setfgcolor(BLUE);
