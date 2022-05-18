@@ -19,7 +19,7 @@ int bc_box(int r, int c, int w, int h) //
 		t[i] = 'q';
 	}
 	
-	t[0] = '1';
+	t[0] = 'l';
 	t[w + 1] = 'k';
 	bc_printA(t);
 	

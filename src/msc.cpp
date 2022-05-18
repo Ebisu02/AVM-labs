@@ -137,7 +137,7 @@ void print_interface()
 	std::cout << " Instruction Counter ";
 	mt_gotoxy(5, 90);
 	mt_setfgcolor(YELLOWW);
-	std::cout << std::dec << setw(2) << std::setfill('0') << counter << std::dec;
+	std::cout << std::dec << setw(2) << std::setfill('0') << counter;
 	mt_setfgcolor(BLUE);
 	mt_gotoxy(7, 85);
 	std::cout << " Operation ";
@@ -151,7 +151,7 @@ void print_interface()
 	std::cout << std::hex << v6;
 	std::cout << std::dec;
 	mt_setfgcolor(BLUE);
-	mt_gotoxy(36, 1);
+	mt_gotoxy(24, 2);
 	return;
 }
 
@@ -221,13 +221,87 @@ void signal_handling_process(int signal)
 
 void key_step()
 {
-	if (cur_index <= 99) { ++cur_index; return; }
+	if (cur_index <= 99)
+	{ 
+		++cur_index;
+		return; 
+	}
 	cur_index = 0; 
 }
 
 void signal_reset(int signal)
 {
 	key_reset();
+}
+
+void key_enter()
+{
+	int v2;
+	mt_setfgcolor(YELLOWW);
+	mt_gotoxy(24, 2);
+	std::cout << "Input: ";
+	std::cin >> std::hex >> v2;
+	std::cin >> std::dec;
+	v2 %= 10000;
+	mt_setfgcolor(BLUE);
+	sc_memorySet(counter, v2); 
+	print_interface();
+}
+
+void key_instructionCounter()
+{
+	int v3; 
+	mt_setfgcolor(YELLOWW); 
+	mt_gotoxy(24, 2); 
+	std::cout << "Input: ";
+	std::cin >> std::dec >> v3;
+	mt_setfgcolor(BLUE);
+	if (v3 <=100 && v3 >= 1) 
+		cur_index = v3 - 1;
+}
+
+void key_accumulator()
+{
+	int v; 
+	mt_setfgcolor(YELLOWW); 
+	mt_gotoxy(24, 2); 
+	std::cout << "Input: ";
+	std::cin >> std::hex >> v; 
+	mt_setfgcolor(BLUE);
+	v %= 10000;
+	accumulator = v;
+}
+
+void key_up()
+{
+	if (cur_index > 9) 
+		cur_index -= 10;
+	else if (cur_index >= 0 && cur_index <= 9)
+		cur_index += 90;
+}
+
+void key_down()
+{
+	if (cur_index < 90) 
+		cur_index += 10;
+	else if (cur_index >= 90 && cur_index <= 99)
+		cur_index -= 90;
+}
+
+void key_left()
+{
+	if (cur_index > 0) 
+		cur_index -= 1;
+	else if (cur_index == 0)
+		cur_index = 99;
+}
+
+void key_right()
+{
+	if (cur_index < 99) 
+		cur_index += 1;
+	else if (cur_index == 99)
+		cur_index = 0;
 }
 
 void main_logic()
@@ -248,27 +322,56 @@ void main_logic()
 		rk_readkey(key);
 		switch(key)
 		{
-			case None: break;
-			case Load: sc_memoryLoad(filename); print_interface(); break;
-			case Save: sc_memorySave(filename); print_interface(); break;
-			case Run: key_run(); print_interface(); break;
-			case Step: key_step(); print_interface(); break;
-			case Reset: key_reset(); print_interface(); break;
-			case Accumulator: int v; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
-					  std::cin >> std::hex >> v; mt_setfgcolor(BLUE);
-					  accumulator = v; print_interface(); break;
-			case InstructionCounter: int v3; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
-					  std::cin >> std::dec >> v3; mt_setfgcolor(BLUE);
-					  if (v3 <=100 && v3 >= 1) cur_index = v3 - 1; print_interface(); break;
-			case Down:  if (cur_index < 90) cur_index += 10; break;
-			case Up: if (cur_index > 9) cur_index -= 10; break;
-			case Left: if (cur_index > 0) cur_index -= 1; break;
-			case Right: if (cur_index < 99) cur_index += 1; break;
-			case CloseApplication: exit(1); break;
-			case Enter: int v2; mt_setfgcolor(YELLOWW); mt_gotoxy(24, 2); std::cout << "Input: ";
-					  std::cin >> std::hex >> v2; mt_setfgcolor(BLUE);
-					  sc_memorySet(counter, v2); print_interface(); break;
-			default: break;
+			case None: 
+				break;
+			case Load: 
+				sc_memoryLoad(filename); 
+				print_interface(); 
+				break;
+			case Save: 
+				sc_memorySave(filename); 
+				print_interface(); 
+				break;
+			case Run: 
+				key_run(); 
+				print_interface(); 
+				break;
+			case Step: 
+				key_step(); 
+				print_interface(); 
+				break;
+			case Reset: 
+				key_reset(); 
+				print_interface(); 
+				break;
+			case Accumulator:  
+				key_accumulator();
+				print_interface(); 
+				break;
+			case InstructionCounter: 
+				key_instructionCounter(); 
+				print_interface(); 
+				break;
+			case Down:
+				key_down();
+				break;
+			case Up:
+				key_up(); 
+				break;
+			case Left: 
+				key_left();
+				break;
+			case Right: 
+				key_right();
+				break;
+			case CloseApplication:
+				exit(1); 
+				break;
+			case Enter: 
+				key_enter(); 
+				break;
+			default: 
+				break;
 		}
 		if (counter != cur_index)
 		{

@@ -22,8 +22,8 @@ using namespace std;
 };*/
 
 
-int sas_read(int address, int value); // 10
-int sas_write(int address, int value); // 11
+int sas_read(int address); // 10
+int sas_write(int address); // 11
 int sas_load(int address); // 20
 int sas_store(int accumulator, int address); // 21
 int sas_add(int accumulator, int address); // 30
