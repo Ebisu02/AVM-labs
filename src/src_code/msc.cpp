@@ -1,4 +1,4 @@
-#include "msc.h"
+#include "../src_headers/msc.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -306,8 +306,8 @@ void key_right()
 
 void main_logic()
 {
-    char* filename = "memory.bin";
-	char* touch_command = "touch memory.bin";
+    char* filename = "src_code/obj/memory.bin";
+	char* touch_command = "touch src_code/obj/memory.bin";
 	sc_regSet(CLOCK_PULSE_IGNORE, true);
 	counter = 0;
 	signal(SIGALRM, signal_handling_process);

@@ -1,4 +1,4 @@
-#include "myTerm.h"
+#include "../src_headers/myTerm.h"
 
 using namespace std;
 

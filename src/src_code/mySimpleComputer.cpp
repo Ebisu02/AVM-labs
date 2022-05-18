@@ -1,4 +1,4 @@
-#include "mySimpleComputer.h"
+#include "../src_headers/mySimpleComputer.h"
 
 // 1 - "p" - segmentation fault
 // 2 - "0" - error of deleting on null

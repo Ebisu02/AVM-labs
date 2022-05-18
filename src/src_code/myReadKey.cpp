@@ -1,4 +1,4 @@
-#include "myReadKey.h"
+#include "../src_headers/myReadKey.h"
 
 termios OldSettings;
 

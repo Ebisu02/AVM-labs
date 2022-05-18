@@ -1,5 +1,5 @@
-#include "assembler.h"
-#include "msc.h"
+#include "../src_headers/assembler.h"
+#include "../src_headers/msc.h"
 #include <iostream>
 
 int sas_read(int address)
