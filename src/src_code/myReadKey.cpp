@@ -14,6 +14,8 @@ int rk_readkey(KEYS & key)
 	else if(strcmp(b,"\E[D")==0) 		key=KEYS::Left;
 	else if(strcmp(b,"\E[15~")==0) 	key=KEYS::Accumulator;
 	else if(strcmp(b,"\E[17~")==0) 	key=KEYS::InstructionCounter;
+	else if(strcmp(b,"\E[18~")==0) 	key=KEYS::Compile_asm;
+	else if(strcmp(b,"\E[19~")==0) 	key=KEYS::Compile_basic;
 	else if(b[0]=='l') 			key=KEYS::Load;
 	else if(b[0]=='s') 			key=KEYS::Save;
 	else if(b[0]=='r') 			key=KEYS::Run;

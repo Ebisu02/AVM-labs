@@ -15,7 +15,7 @@ enum COLORS
 	PEARPLE,
 	BLUE,
 	LIGHT_BLUE,
-	GREEN,
+	GREEN
 };
 
 int mt_setbgcolor(COLORS color);

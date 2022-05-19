@@ -23,6 +23,8 @@ enum KEYS
 	Right,
 	CloseApplication,
 	Enter,
+	Compile_asm,
+	Compile_basic
 };
 
 int rk_readkey(KEYS &key);

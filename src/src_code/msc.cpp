@@ -72,21 +72,20 @@ void print_interface()
 	mt_gotoxy(11, 79);
 	unsigned int tFlag;
 	sc_regGet(SEGMENTATION_FAULT, &tFlag);
-	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(RED);
 	std::cout << "0 ";
 	sc_regGet(DIVISION_BY_ZERO, &tFlag);
-	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(RED);
 	std::cout << "Z ";
 	sc_regGet(OUT_OF_BOUNDS, &tFlag);
-	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(RED);
 	std::cout << "B ";
 	sc_regGet(CLOCK_PULSE_IGNORE, &tFlag);
-	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	tFlag == 1 ? mt_setfgcolor(WHITE) : mt_setfgcolor(GREEN);
 	std::cout << "C ";
 	sc_regGet(INVALID_COMMAND, &tFlag);
-	tFlag == 1 ? mt_setfgcolor(RED) : mt_setfgcolor(GREEN);
+	tFlag == 1 ? mt_setfgcolor(WHITE) : mt_setfgcolor(GREEN);
 	std::cout << "I ";
-	mt_setfgcolor(WHITE);
 	bc_box(10, 73, 20, 1);
 	
 	//big chars printing //
@@ -119,7 +118,10 @@ void print_interface()
 	mt_gotoxy(21, 76);
 	std::cout << "F6 - InstructionCounter";
 	mt_gotoxy(22, 76);
-	bc_box(13, 73, 26, 8);
+	std::cout << "F7 - compile asm";
+	mt_gotoxy(23, 76);
+	std::cout << "F8 - compile basic";
+	bc_box(13, 73, 26, 10);
 
 	//names
 	mt_setfgcolor(BLUE);

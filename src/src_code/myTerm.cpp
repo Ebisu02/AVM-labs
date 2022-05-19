@@ -1,5 +1,5 @@
 #include "../src_headers/myTerm.h"
-
+//
 using namespace std;
 
 int mt_getscreensize(int * rows, int * cols)
