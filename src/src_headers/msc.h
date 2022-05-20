@@ -1,4 +1,11 @@
 #pragma once
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <sys/time.h>
+#include <signal.h>
+#include <string>
+#include <fstream>
 #include "assembler.h"
 #include "bc.h"
 #include "myReadKey.h"
@@ -17,3 +24,5 @@ void main_logic();
 int get_value_by_counter();
 void set_accumulator(int value);
 void set_counter(int value);
+int get_accumulator();
+bool is_file_exist(string path_to_file);

@@ -2,12 +2,25 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
+#include <filesystem>
 #include <sys/time.h>
 #include <signal.h>
+#include <string.h>
 
 int counter = 0;
 int cur_index = 0;
 int accumulator = 0;
+
+bool is_file_exist(string path_to_file)
+{
+	//std::cout << file.is_open();
+	if (std::filesystem::exists(path_to_file))
+	{
+		return true;
+	}
+	return false;
+}
 
 void set_counter(int value)
 {
@@ -250,6 +263,29 @@ void key_enter()
 	print_interface();
 }
 
+void key_compile_asm()
+{
+	string path; 
+	mt_setfgcolor(YELLOWW);
+	mt_gotoxy(26, 2);
+	std::cout << "Please make sure that ur [name].sa simple assembler script in directory scripts/asm/\n"
+			  << " and then enter a name of this file (Ex.: name for 'scripts/asm/asm1.sa' is 'asm1'\n Input: ";
+	std::cin >> path;
+
+	path = "../scripts/asm/" + path + ".msa";
+	if (is_file_exist(path))
+	{
+		mt_gotoxy(29, 2);
+		std::cout << path;
+		sas_manager(path);
+	}
+	else
+	{
+		mt_gotoxy(29, 2);
+		std::cout << "Error: invalid path to file";
+	}
+}	
+
 void key_instructionCounter()
 {
 	int v3; 
@@ -371,6 +407,9 @@ void main_logic()
 				break;
 			case Enter: 
 				key_enter(); 
+				break;
+			case Compile_asm:
+				key_compile_asm();
 				break;
 			default: 
 				break;

@@ -12,3 +12,7 @@ $(EXECUTABLE): $(OBJECTS)
 	
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
+
+exe:
+	-./src_code/obj/main 
+	clear

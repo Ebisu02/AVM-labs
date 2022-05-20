@@ -1,8 +1,3 @@
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <sys/time.h>
-#include <signal.h>
 #include "../src_headers/msc.h"
 
 int main()

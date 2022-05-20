@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include "msc.h"
 
 using namespace std;
@@ -35,4 +36,4 @@ int sas_jneg(int accumulator, int address); // 41
 int sas_jz(int accumulator, int address); // 42
 int sas_halt(); // 43
 int sas_mova(int address, int accumulator); // 71
-void sas_manager();
+void sas_manager(string path_to_file);
