@@ -162,7 +162,7 @@ void print_interface()
 	int v5 = 0;
 	int v6 = 0;
 	sc_memoryGet(cur_index, v6);
-	sc_commandDecode(&v4, &v5, v6);
+	//sc_commandDecode(&v4, &v5, v6);
 	std::cout << std::hex << v6;
 	std::cout << std::dec;
 	mt_setfgcolor(BLUE);
@@ -255,8 +255,7 @@ void key_enter()
 	mt_setfgcolor(YELLOWW);
 	mt_gotoxy(24, 2);
 	std::cout << "Input: ";
-	std::cin >> std::hex >> v2;
-	std::cin >> std::dec;
+	std::cin >> v2;
 	v2 %= 10000;
 	mt_setfgcolor(BLUE);
 	sc_memorySet(counter, v2); 

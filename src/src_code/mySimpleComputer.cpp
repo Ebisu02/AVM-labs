@@ -6,9 +6,6 @@
 // 4 - "T" - ignoring tact impulses
 // 5 - "E" - invalid command
 
-
-using namespace std;
-
 int memory[100];
 unsigned int flags = 0;
 
@@ -121,24 +118,74 @@ int sc_regGet(int reg, unsigned int* value)
 	return 0;
 }
 
-int sc_commandEncode(int command, int operand, int * value)
+int sc_commandEncode(int str_num, string command, int operand)
 {
-	if (operand <= 0x7F)
+	int command_code;
+	if (command == "READ")
 	{
-		if (std::binary_search(std::begin(commands), std::end(commands), command));
-		{
-			*value = (command << 7) | operand;
-			return 0;
-		}
+		command_code = commands[0];
+	}
+	else if (command == "WRITE")
+	{
+		command_code = commands[1];
+	}
+	else if (command == "ADD")
+	{
+		command_code = commands[2];
+	}
+	else if (command == "SUB")
+	{
+		command_code = commands[3];
+	}
+	else if (command == "DIV")
+	{
+		command_code = commands[4];
+	}
+	else if (command == "MUL")
+	{
+		command_code = commands[5];
+	}
+	else if (command == "LOAD")
+	{
+		command_code = commands[6];
+	}
+	else if (command == "STORE")
+	{
+		command_code = commands[7];
+	}
+	else if (command == "JUMP")
+	{
+		command_code = commands[8];
+	}
+	else if (command == "JNEG")
+	{
+		command_code = commands[9];
+	}
+	else if (command == "JZ")
+	{
+		command_code = commands[10];
+	}
+	else if (command == "HALT")
+	{
+		command_code = commands[11];
+	}
+	else if (command == "MOVA")
+	{
+		command_code = commands[12];
+	}
+	else
+	{
 		sc_regSet(INVALID_COMMAND, 1);
 		return -1;
 	}
-	return -1;
+	int value_to_write = (command_code << 7) | operand;
+	sc_memorySet(str_num, value_to_write);
+	return 0;
 }
 
-int sc_commandDecode(int* command, int* operand, int value)
+int sc_commandDecode(string& command, int& operand)
 {
-	int temp;
+/*	int temp;
 
 	if (((value >> 14) & 1) == 0)
 	{
@@ -159,5 +206,5 @@ int sc_commandDecode(int* command, int* operand, int value)
 	{
 		sc_regSet(INVALID_COMMAND, 1);
 		return -1;
-	}
+	}*/
 }

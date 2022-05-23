@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
 #include "msc.h"
 
 using namespace std;
@@ -22,7 +20,7 @@ using namespace std;
 	MOVA // Get value from address and write it in address what we have in accumulator  
 };*/
 
-
+int sas_from_string_to_int(string operand);
 int sas_read(int address); // 10
 int sas_write(int address); // 11
 int sas_load(int address); // 20
@@ -36,4 +34,5 @@ int sas_jneg(int accumulator, int address); // 41
 int sas_jz(int accumulator, int address); // 42
 int sas_halt(); // 43
 int sas_mova(int address, int accumulator); // 71
+int sas_equals(int address, int value);
 void sas_manager(string path_to_file);

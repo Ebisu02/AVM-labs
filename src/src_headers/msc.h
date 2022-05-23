@@ -1,16 +1,28 @@
 #pragma once
+
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <algorithm>
 #include <iomanip>
 #include <sys/time.h>
 #include <signal.h>
+#include <map>
 #include <string>
+#include <sstream>
+#include <vector>
 #include <fstream>
+#include <cstdio>
+#include <cstring>
+#include <unistd.h>
+
 #include "assembler.h"
 #include "bc.h"
 #include "myReadKey.h"
 #include "myTerm.h"
 #include "mySimpleComputer.h"
+
 using namespace std;
 
 void print_interface();

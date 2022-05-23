@@ -1,6 +1,11 @@
 #include "../src_headers/assembler.h"
 #include "../src_headers/msc.h"
 
+int sas_from_string_to_int(string operand)
+{
+	return stoi(operand);
+}
+
 void sas_remove_extra_spaces_from_asm_string(string& str)
 {
 	for (string::iterator it = str.begin(); it != str.end(); ++it)
@@ -15,7 +20,7 @@ void sas_remove_extra_spaces_from_asm_string(string& str)
 	}
 }
 
-void sas_read_asm_string(string s, string& command, string& operand)
+void sas_read_asm_string(string s, int& string_num, string& command, string& operand)
 {
 	command = "";
 	operand = "";
@@ -25,7 +30,22 @@ void sas_read_asm_string(string s, string& command, string& operand)
 		bool fcommand = true;
 		bool foperand = false;
 		bool end = false;
-		for (int i = 0; i < s.size(); ++i)
+		int start;
+		string num = "";
+		for (start = 0; start < s.size(); ++start)
+		{
+			if (s[start] == ' ')
+			{
+				break;
+			}
+			else
+			{
+				num += s[start];
+			}
+		}
+		string_num = sas_from_string_to_int(num);
+		start++;
+		for (int i = start; i < s.size(); ++i)
 		{
 			if (s[i] == ';')
 			{
@@ -60,6 +80,17 @@ void sas_read_asm_string(string s, string& command, string& operand)
 	}
 }
 
+int sas_equals(int address, int value)
+{
+	if (address < 0 || address > 99)
+	{
+		return 1;
+	}
+	value %= 10000;
+	sc_memorySet(address, value);
+	return 0;
+}
+
 int sas_read(int address)
 {
 	if (address < 0 || address > 99)
@@ -69,10 +100,8 @@ int sas_read(int address)
 	}
 	int value;
 	//std::cout << "\nPlease enter a value for memory cell #" << address << " - ";
-	std::cout << "Input: ";
-	std::cin >> std::hex >> value;
-	std::cin >> std::dec;
-	std::cout << value;
+	std::cout << "\nInput: ";
+	std::cin >> value;
 	value %= 10000;
 	sc_memorySet(address, value);
 	value = sc_memoryGet(address, value);
@@ -90,7 +119,7 @@ int sas_write(int address)
 	int value;
 	sc_memoryGet(address, value);
 	//std::cout << "\nValue in memory cell #" << address << " - " << value;
-	std::cout << "\nOutput: " << value;
+	std::cout << "\nOutput: " << value << "\n";
 }
 
 int sas_load(int address)
@@ -131,9 +160,16 @@ int sas_div(int accumulator, int address)
 {
 	int v1, res;
 	sc_memoryGet(address, v1);
-	res = accumulator / v1;
-	res %= 10000;
-	set_accumulator(res);
+	if (v1 != 0)
+	{
+		res = accumulator / v1;
+		res %= 10000;
+		set_accumulator(res);
+	}
+	else
+	{
+		throw runtime_error("Critical Error: Division by zero");
+	}
 	return 0; // is ok
 }
 
@@ -185,11 +221,6 @@ int sas_mova(int address, int accumulator)
 	return 0; // is ok?
 }
 
-int sas_from_string_to_int(string operand)
-{
-	return stoi(operand);
-}
-
 bool sas_is_operand_correct(string operand)
 {
 	size_t found = operand.find_first_not_of("1234567890");
@@ -219,9 +250,10 @@ void sas_manager(string path_to_file)
 				continue;
 			}
 			sas_remove_extra_spaces_from_asm_string(s);
+			int string_num;
 			string command;
 			string operand;
-			sas_read_asm_string(s, command, operand);
+			sas_read_asm_string(s, string_num, command, operand);
 			sas_is_operand_correct(operand);
 			int opr = sas_from_string_to_int(operand);
 			if (command == "READ")
@@ -283,6 +315,10 @@ void sas_manager(string path_to_file)
 			{
 				sas_mova(opr, get_accumulator());
 				//break;
+			}
+			else if (command == "=")
+			{
+				sas_equals(string_num, opr);
 			}
 			else if (command == "HALT")
 			{

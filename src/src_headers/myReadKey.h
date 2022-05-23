@@ -1,9 +1,7 @@
 #pragma once
 
 #include <termios.h>
-#include <cstdio>
-#include <cstring>
-#include <unistd.h>
+#include "msc.h"
 
 using namespace std;
 
