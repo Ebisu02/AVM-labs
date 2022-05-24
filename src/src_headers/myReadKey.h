@@ -1,28 +1,27 @@
 #pragma once
 
-#include <termios.h>
 #include "msc.h"
+#include <termios.h>
 
 using namespace std;
 
-enum KEYS
-{
-	None,
-	Load,
-	Save,
-	Run,
-	Step,
-	Reset,
-	Accumulator,        // F5
-	InstructionCounter, // F6
-	Up,
-	Down,
-	Left,
-	Right,
-	CloseApplication,
-	Enter,
-	Compile_asm,
-	Compile_basic
+enum KEYS {
+  None,
+  Load,
+  Save,
+  Run,
+  Step,
+  Reset,
+  Accumulator,        // F5
+  InstructionCounter, // F6
+  Up,
+  Down,
+  Left,
+  Right,
+  CloseApplication,
+  Enter,
+  Compile_asm,
+  Compile_basic
 };
 
 int rk_readkey(KEYS &key);

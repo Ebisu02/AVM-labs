@@ -1,27 +1,26 @@
 #pragma once
 
-#include <iostream>
-#include <sstream>
-#include <stdlib.h>
-#include <stdio.h>
 #include <algorithm>
-#include <iomanip>
-#include <sys/time.h>
-#include <signal.h>
-#include <map>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <fstream>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <signal.h>
+#include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <sys/time.h>
 #include <unistd.h>
+#include <vector>
 
 #include "assembler.h"
 #include "bc.h"
 #include "myReadKey.h"
-#include "myTerm.h"
 #include "mySimpleComputer.h"
+#include "myTerm.h"
 
 using namespace std;
 
