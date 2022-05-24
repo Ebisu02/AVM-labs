@@ -35,4 +35,4 @@ int sas_jz(int accumulator, int address); // 42
 int sas_halt(); // 43
 int sas_mova(int address, int accumulator); // 71
 int sas_equals(int address, int value);
-void sas_manager(string path_to_file);
+void sas_manager(string path_to_file, string path_to_obj_file);

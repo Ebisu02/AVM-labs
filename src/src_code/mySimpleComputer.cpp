@@ -118,93 +118,48 @@ int sc_regGet(int reg, unsigned int* value)
 	return 0;
 }
 
+vector<string> commands_string_id1 = 
+{
+	"READ", "WRITE", "ADD", "SUB", "DIV", "MUL", "LOAD", "STORE", "JUMP", "JNEG",
+	"JZ", "HALT", "MOVA", "="
+};
+
 int sc_commandEncode(int str_num, string command, int operand)
 {
 	int command_code;
-	if (command == "READ")
+	vector<string>::iterator it = find(commands_string_id1.begin(), commands_string_id1.end(), command);
+	if (it != commands_string_id1.end())
 	{
-		command_code = commands[0];
-	}
-	else if (command == "WRITE")
-	{
-		command_code = commands[1];
-	}
-	else if (command == "ADD")
-	{
-		command_code = commands[2];
-	}
-	else if (command == "SUB")
-	{
-		command_code = commands[3];
-	}
-	else if (command == "DIV")
-	{
-		command_code = commands[4];
-	}
-	else if (command == "MUL")
-	{
-		command_code = commands[5];
-	}
-	else if (command == "LOAD")
-	{
-		command_code = commands[6];
-	}
-	else if (command == "STORE")
-	{
-		command_code = commands[7];
-	}
-	else if (command == "JUMP")
-	{
-		command_code = commands[8];
-	}
-	else if (command == "JNEG")
-	{
-		command_code = commands[9];
-	}
-	else if (command == "JZ")
-	{
-		command_code = commands[10];
-	}
-	else if (command == "HALT")
-	{
-		command_code = commands[11];
-	}
-	else if (command == "MOVA")
-	{
-		command_code = commands[12];
+		int ind = it - commands_string_id1.begin();
+		command_code = commands[ind];
 	}
 	else
 	{
 		sc_regSet(INVALID_COMMAND, 1);
 		return -1;
 	}
-	int value_to_write = (command_code << 7) | operand;
-	sc_memorySet(str_num, value_to_write);
+	if (operand <= 0x7F)
+	{
+		int value_to_write = (command_code << 7) | operand;
+		sc_memorySet(str_num, value_to_write);
+		return value_to_write;
+	}
 	return 0;
 }
 
-int sc_commandDecode(string& command, int& operand)
+int sc_commandDecode(string& command, int& operand, int value)
 {
-/*	int temp;
-
+	int command_vl;
 	if (((value >> 14) & 1) == 0)
 	{
-		temp = value >> 7;
-		if (std::binary_search(std::begin(commands), std::end(commands), temp))
+		command_vl = value >> 7;
+		int ind = find(std::begin(commands), std::end(commands), command_vl) - std::begin(commands);
+		if (ind < commands_string_id1.size())
 		{
-			*command = temp;
-			*operand = value & 0x7F;
-			return 0;
-		}
-		else
-		{
-			sc_regSet(INVALID_COMMAND, 1);
-			return -1;
+			command = commands_string_id1[ind];
+			operand = value & 0x7F;
+			return command_vl;
 		}
 	}
-	else
-	{
-		sc_regSet(INVALID_COMMAND, 1);
-		return -1;
-	}*/
+	return -1;
 }

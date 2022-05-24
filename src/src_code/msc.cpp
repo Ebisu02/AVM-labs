@@ -159,12 +159,15 @@ void print_interface()
 	mt_gotoxy(8, 90);
 	mt_setfgcolor(YELLOWW);
 	int v4 = 0;
+	string cmd;
 	int v5 = 0;
 	int v6 = 0;
 	sc_memoryGet(cur_index, v6);
-	//sc_commandDecode(&v4, &v5, v6);
-	std::cout << std::hex << v6;
-	std::cout << std::dec;
+	v4 = sc_commandDecode(cmd, v5, v6);
+	if (v4 != 0)
+	{
+		std::cout << std::hex << v4 << std::dec;
+	}
 	mt_setfgcolor(BLUE);
 	mt_gotoxy(24, 2);
 	return;
@@ -174,6 +177,7 @@ void key_reset()
 {
 	sc_memoryInit();
 	counter = cur_index = 0;
+	accumulator = 0;
 	sc_regInit();
 	sc_regSet(CLOCK_PULSE_IGNORE, true);
 	print_interface();
@@ -185,9 +189,19 @@ void key_run()
 	KEYS key = None;
 	unsigned int tf1, tf2;
 	sc_regGet(CLOCK_PULSE_IGNORE, &tf1);
+	int i = 0;
 	sc_regGet(OUT_OF_BOUNDS, &tf2);
 	while (tf1 == 0 && tf2 == 0)
 	{
+		string command;
+		int operand;
+		int value;
+		sc_memoryGet(cur_index, value);
+		sc_commandDecode(command, operand, value);
+		if (command == "READ")
+		{
+			sas_read(operand);
+		}
 		mt_clrscr();
 		print_interface();
 		cur_index = counter;
@@ -201,7 +215,7 @@ void key_run()
 		}
 		sc_regGet(CLOCK_PULSE_IGNORE, &tf1);
 		sc_regGet(OUT_OF_BOUNDS, &tf2);
-		fflush(stdout);		
+		fflush(stdout);
 	}
 }
 
@@ -237,7 +251,64 @@ void signal_handling_process(int signal)
 void key_step()
 {
 	if (cur_index <= 99)
-	{ 
+	{
+		string command;
+		int operand;
+		int value;
+		sc_memoryGet(cur_index, value);
+		sc_commandDecode(command, operand, value);
+		if (command == "READ")
+		{
+			sas_read(operand);
+		}
+		else if (command == "WRITE")
+		{
+			sas_write(operand);
+		}
+		else if (command == "LOAD")
+		{
+			sas_load(operand);
+		}
+		else if (command == "STORE")
+		{
+			sas_store(get_accumulator(), operand);
+		}
+		else if (command == "=")
+		{
+			sas_equals(cur_index, operand);
+		}
+		else if (command == "ADD")
+		{
+			sas_add(get_accumulator(), operand);
+		}
+		else if (command == "SUB")
+		{
+			sas_sub(get_accumulator(), operand);
+		}
+		else if (command == "MUL")
+		{
+			sas_mul(get_accumulator(), operand);
+		}
+		else if (command == "DIV")
+		{
+			sas_div(get_accumulator(), operand);
+		}
+		else if (command == "JUMP")
+		{
+			sas_jump(operand);
+		}
+		else if (command == "JNEG")
+		{
+			sas_jneg(get_accumulator(), operand);
+		}
+		else if (command == "JZ")
+		{
+			sas_jz(get_accumulator(), operand);
+		}
+		else if (command == "HALT")
+		{
+			sas_halt();
+		}
 		++cur_index;
 		return; 
 	}
@@ -265,18 +336,22 @@ void key_enter()
 void key_compile_asm()
 {
 	string path; 
+	string path_o;
 	mt_setfgcolor(YELLOWW);
 	mt_gotoxy(26, 2);
 	std::cout << "Please make sure that ur [name].sa simple assembler script in directory scripts/asm/\n"
 			  << " and then enter a name of this file (Ex.: name for 'scripts/asm/asm1.sa' is 'asm1'\n Input: ";
 	std::cin >> path;
 
+	path_o = "../scripts/asm/obj/" + path + ".o";
 	path = "../scripts/asm/" + path + ".msa";
+	string tch_cmd = "touch " + path_o; 
+	system(tch_cmd.c_str());
 	if (is_file_exist(path))
 	{
 		mt_gotoxy(29, 2);
-		std::cout << path;
-		sas_manager(path);
+		std::cout << path_o;
+		sas_manager(path, path_o);
 	}
 	else
 	{

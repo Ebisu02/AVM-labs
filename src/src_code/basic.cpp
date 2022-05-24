@@ -56,6 +56,7 @@ void sb_print(string name)
 
 void sb_goto(int str_num)
 {
+	// NEED TO REFACTORE
 	// check if this string num in code exist
 	if (str_num < basic_code.size() && str_num > 0)
 	{
@@ -69,6 +70,7 @@ void sb_goto(int str_num)
 
 void sb_if(string left_value, string cond, string right_value, string command)
 {
+	// NEED TO REFACTORE
 	// >, <, >=, <=, !=, ==
 	if (cond == ">")
 	{

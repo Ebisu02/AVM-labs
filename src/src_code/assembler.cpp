@@ -209,7 +209,8 @@ int sas_jz(int accumulator, int address)
 
 int sas_halt()
 {
-	throw runtime_error("Error 0: All ok"); // signal to end assembler code
+	key_reset();
+	std::cout << "Exit with code 0: All ok"; // signal to end assembler code
 }
 
 int sas_mova(int address, int accumulator)
@@ -231,16 +232,21 @@ bool sas_is_operand_correct(string operand)
 	return false;
 }
 
+vector<string> commands_string_id = 
+{
+	"READ", "WRITE", "ADD", "SUB", "DIV", "MUL", "LOAD", "STORE", "JUMP", "JNEG",
+	"JZ", "HALT", "MOVA", "="
+};
+
 // ../scripts/asm/[filename].asm
-void sas_manager(string path_to_file)
+void sas_manager(string path_to_file, string path_to_obj_file)
 {
 	try
 	{
 		ifstream file1(path_to_file);
+		ofstream file_o(path_to_obj_file);
 		string s;
 		int counter = 0;
-/*		mt_gotoxy(30 + counter,2);
-		std::cout << file1.is_open();*/
 		while (getline(file1, s) && ++counter)
 		{
 			mt_gotoxy(30 + counter,2);
@@ -256,74 +262,10 @@ void sas_manager(string path_to_file)
 			sas_read_asm_string(s, string_num, command, operand);
 			sas_is_operand_correct(operand);
 			int opr = sas_from_string_to_int(operand);
-			if (command == "READ")
-			{ 
-				sas_read(opr);
-				//break;
-			}
-			else if (command == "WRITE")
+			if (find(commands_string_id.begin(), commands_string_id.end(), command) != commands_string_id.end())
 			{
-				sas_write(opr);
-				//break;
-			}
-			else if (command == "LOAD")
-			{
-				sas_load(opr);
-				//break;
-			}
-			else if (command == "STORE")
-			{
-				sas_store(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "ADD")
-			{
-				sas_add(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "SUB")
-			{
-				sas_sub(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "DIV")
-			{
-				sas_div(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "MUL")
-			{
-				sas_mul(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "JUMP")
-			{
-				sas_jump(opr);
-				//break;
-			}
-			else if (command == "JNEG")
-			{
-				sas_jneg(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "JZ")
-			{
-				sas_jz(get_accumulator(), opr);
-				//break;
-			}
-			else if (command == "MOVA")
-			{
-				sas_mova(opr, get_accumulator());
-				//break;
-			}
-			else if (command == "=")
-			{
-				sas_equals(string_num, opr);
-			}
-			else if (command == "HALT")
-			{
-				sas_halt();
-				//break;
+				int v_wr = sc_commandEncode(string_num, command, opr);
+				file_o << v_wr << "\n";
 			}
 			else
 			{
@@ -332,6 +274,7 @@ void sas_manager(string path_to_file)
 			}
 		}
 		file1.close();
+		file_o.close();
 	}
 	catch(runtime_error e)
 	{
