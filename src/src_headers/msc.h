@@ -21,6 +21,7 @@
 #include "myReadKey.h"
 #include "mySimpleComputer.h"
 #include "myTerm.h"
+#include "basic.h"
 
 using namespace std;
 

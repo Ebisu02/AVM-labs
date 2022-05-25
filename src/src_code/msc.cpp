@@ -309,6 +309,36 @@ void key_compile_asm() {
   }
 }
 
+void key_compile_basic()
+{
+    string path, path_o, path_asm;
+    mt_setfgcolor(YELLOWW);
+    mt_gotoxy(26, 2);
+    std::cout << "Please make sure that ur [name].sa simple assembler script in "
+        "directory scripts/asm/\n"
+        << " and then enter a name of this file (Ex.: name for "
+        "'scripts/basic/sb1.sb' is 'sb1'\n Input: ";
+    std::cin >> path;
+    path_o = "../scripts/basic/asm/obj/" + path + ".o";
+    path = "../scripts/basic/" + path + ".sb";
+    path_asm = "../scripts/basic/asm/" + path + ".msa";
+    string tch_cmd1 = "touch " + path_o;
+    string tch_cmd2 = "touch " + path_asm;
+    system(tch_cmd1.c_str());
+    system(tch_cmd2.c_str());
+    if (is_file_exist(path))
+    {
+        mt_gotoxy(29, 2);
+        std::cout << path_o;
+        sb_manager(path, path_asm, path_o);
+    }
+    else
+    {
+        mt_gotoxy(29, 2);
+        std::cout << "Error: invalid path to file";
+    }
+}
+
 void key_instructionCounter() {
   int v3;
   mt_setfgcolor(YELLOWW);
@@ -424,6 +454,9 @@ void main_logic() {
       break;
     case Compile_asm:
       key_compile_asm();
+      break;
+    case Compile_basic:
+      key_compile_basic();
       break;
     default:
       break;
