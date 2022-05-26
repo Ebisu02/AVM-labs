@@ -320,8 +320,8 @@ void key_compile_basic()
         "'scripts/basic/sb1.sb' is 'sb1'\n Input: ";
     std::cin >> path;
     path_o = "../scripts/basic/asm/obj/" + path + ".o";
-    path = "../scripts/basic/" + path + ".sb";
     path_asm = "../scripts/basic/asm/" + path + ".msa";
+    path = "../scripts/basic/" + path + ".sb";
     string tch_cmd1 = "touch " + path_o;
     string tch_cmd2 = "touch " + path_asm;
     system(tch_cmd1.c_str());
