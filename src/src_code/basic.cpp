@@ -26,7 +26,7 @@ void sb_input(std::string name, std::vector<std::string> t) {
 	// check if not out of memory(max 100 vars)
 	if (vars.size() < 98) {
 		std::string code =
-			toString(asm_string_counter) + " READ " + toString(vars.size() - 1);
+			toString(asm_string_counter) + " READ " + toString(vars.size());
 		vars.push_back(name);
 		++asm_string_counter;
 		t.push_back(code);
@@ -821,14 +821,13 @@ void sb_manager(std::string path_to_file, std::string path_to_asm_file, std::str
 	}
 	for (int i = 0; i < asm_code.size(); ++i)
 	{
-		std::vector<std::string>::iterator it = asm_code[i].begin();
-		while (it != asm_code[i].end())
+		for (int j = 0; j < asm_code[i].size(); ++j)
 		{
-			fout << *it << "\n";
+			fout << asm_code[i][j] << "\n";
 		}
 	}
 	// delegate this asm file to asm_lib function
 	fout.close();
 	fin.close();
-	//sas_manager(std::string path_to_asm_file, std::string path_to_obj_file);
+	sas_manager(path_to_asm_file, path_to_obj_file);
 }
